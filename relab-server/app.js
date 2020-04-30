@@ -2,6 +2,8 @@ const express = require('express');
 const app = new express();
 const sql = require('mssql'); //Libreria per la connessione al dbms MSSQL
 
+const CC = require('./CoordConverter.js');
+const coordConverter =  new CC();
 
 //Oggetto di connessione al DB
 const config = {
@@ -32,8 +34,9 @@ function makeSqlRequest(res) {
 function sendQueryResults(err,result, res)
 {
     if (err) console.log(err); // ... error checks
-    res.send(result.recordset);  //Invio il risultato al Browser
+    res.send(coordConverter.generateGeoJson(result.recordset));  //Invio il risultato al Browser
 }
+
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!');
 });

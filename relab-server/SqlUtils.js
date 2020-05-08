@@ -12,16 +12,19 @@ const config = {
 
 module.exports = class SqlUtils {
 
-    static connect(res, connectedCallback)
+    //dato che il metodo connect richiama il metodo connectCallback deve ottenere il parametro req
+    static connect(req, res, connectedCallback)
     {
         sql.connect(config, (err) => {
             if (err) console.log(err);  // ... error check
-            else connectedCallback(res);     //callback da eseguire in caso di connessione avvenuta 
+            else connectedCallback(req, res);     //callback da eseguire in caso di connessione avvenuta 
+            //aggiunto req
         });
     }
 
     //makeSqlRequest esegue una query sul db, se la query va a buon fine viene richiamata la funzione di //callback che invoca il metodo sendQuery
-    static makeSqlRequest(res) {
+    //Anche makeSqlRequest è una callback richiamata da connect, dobbiamo aggiungere solo il parametro req
+    static makeSqlRequest(req, res) {
         let sqlRequest = new sql.Request();  //sqlRequest: oggetto che serve a eseguire le query
         let q = 'SELECT DISTINCT TOP (100) [GEOM].STAsText() FROM [Katmai].[dbo].[interventiMilano]';
         //eseguo la query e aspetto il risultato nella callback
@@ -34,11 +37,14 @@ module.exports = class SqlUtils {
         res.send(coordConverter.generateGeoJson(result.recordset));  //Invio il risultato al Browser
     }
 
-    static ciVettRequest(res) {
+    static ciVettRequest(req, res) {
         let sqlRequest = new sql.Request();  //sqlRequest: oggetto che serve a eseguire le query
+        let foglio = req.params.foglio; //ottengo il foglio passato come parametro dall'url
+
         let q = `SELECT INDIRIZZO, WGS84_X, WGS84_Y, CLASSE_ENE, EP_H_ND, CI_VETTORE, FOGLIO, SEZ
         FROM [Katmai].[dbo].[interventiMilano]
-        WHERE FOGLIO = 90`
+        WHERE FOGLIO = ${foglio}`
+
         //eseguo la query e aspetto il risultato nella callback
        sqlRequest.query(q, (err, result) => {SqlUtils.sendCiVettResult(err,result,res)}); 
     }

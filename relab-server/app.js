@@ -14,6 +14,11 @@ app.get('/', function (req, res) {
    sqlUtils.connect(res, sqlUtils.makeSqlRequest);
 });
 
+app.get('/ci_vettore', function (req, res) {
+    //richiamo il metodo che ottiene l'elenco dei vettori energetici
+    sqlUtils.connect(res, sqlUtils.ciVettRequest);
+});
+
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!');
 });

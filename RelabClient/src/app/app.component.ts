@@ -53,13 +53,13 @@ export class AppComponent {
   //Una volta che la pagina web è caricata, viene lanciato il metodo ngOnInit scarico i dati
   //dal server
   ngOnInit() {
-    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-d23ce09d-6e75-4444-832b-f56337d6bdde.ws-eu01.gitpod.io");   //l’url che uso per testare il server
+    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-b3a9b58e-935d-477d-89ca-cd6c442008df.ws-eu01.gitpod.io");   //l’url che uso per testare il server
     this.obsGeoData.subscribe(this.prepareData);
 
     //Visualizzare i vettori energetici
 
     //Effettua la chiamata al server per ottenere l’elenco dei vettori energetici
-    this.obsCiVett = this.http.get<Ci_vettore[]>("https://3000-d23ce09d-6e75-4444-832b-f56337d6bdde.ws-eu01.gitpod.io/ci_vettore/90");
+    this.obsCiVett = this.http.get<Ci_vettore[]>("https://3000-b3a9b58e-935d-477d-89ca-cd6c442008df.ws-eu01.gitpod.io/ci_vettore/234");
     this.obsCiVett.subscribe(this.prepareCiVettData);
   }
 

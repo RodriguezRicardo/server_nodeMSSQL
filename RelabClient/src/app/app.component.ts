@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { Ci_vettore } from './models/ci_vett.model';
 import { Marker } from './models/marker.model';
 
+import { MouseEvent } from '@agm/core';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,13 @@ export class AppComponent {
 
   obsCiVett : Observable<Ci_vettore[]>; //Crea un observable per ricevere i vettori energetici
   markers: Marker[];
+
+
+  //per fare il cerchio, aggiungo questi attributi
+  circleLat : number = 0; //Latitudine e longitudine iniziale del cerchio
+  circleLng: number = 0;
+  maxRadius: number = 400; //Voglio evitare raggi troppo grossi
+  radius : number = this.maxRadius; //Memorizzo il raggio del cerchio
 
 
   constructor(public http: HttpClient) {
@@ -79,6 +87,46 @@ export class AppComponent {
     this.obsCiVett.subscribe(this.prepareCiVettData);     //Commenta
     console.log(val);
     return false;
+  }
+
+  //Aggiunto il gestore del metodo mapClicked
+  mapClicked($event: MouseEvent) {
+    this.circleLat = $event.coords.lat; //Queste sono le coordinate cliccate
+    this.circleLng = $event.coords.lng; //Sposto il centro del cerchio qui
+    this.lat = this.circleLat; //Sposto il centro della mappa qui
+    this.lng = this.circleLng;
+    this.zoom = 15;  //Zoom sul cerchio
+  }
+
+  //Aggiunto il gestore del metodo radiusChange
+  //Ogni volta che si ridimensiona il cerchio, dobbiamo salvare il raggio del cerchio
+  circleRedim(newRadius : number){
+    console.log(newRadius);           //Posso leggere sulla console il nuovo raggio
+    this.radius = newRadius;         //Ogni volta che modifico il cerchio, ne salvo il raggio
+  }
+
+  //Aggiunto il gestore del metodo circleDblClick
+
+  circleDoubleClicked(circleCenter)
+  {
+    console.log(circleCenter);       //Voglio ottenere solo i valori entro questo cerchio
+    console.log(this.radius);
+
+    //Quando si fa doppio click sul cerchio, si setta la lat e lng del cerchio al punto dove si clicca
+    this.circleLat = circleCenter.coords.lat; //Aggiorno le coordinate del cerchio
+    this.circleLng = circleCenter.coords.lng; //Aggiorno le coordinate del cerchio
+
+    //Non conosco ancora le prestazioni del DB, non voglio fare ricerche troppo onerose
+
+    //Se si ha un raggio troppo grande, applicazione si impalla, perche' non si riesce a visualizzare tante
+    //informazioni in una sola mappa
+    if (this.radius > this.maxRadius)
+    {
+      console.log("area selezionata troppo vasta sarà reimpostata a maxRadius");
+      this.radius = this.maxRadius;
+    }
+    console.log("raggio in gradi " + (this.radius * 0.00001)/1.1132);
+    //Voglio spedire al server una richiesta che mi ritorni tutte le abitazioni all'interno del cerchio
   }
 
 

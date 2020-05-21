@@ -1,6 +1,7 @@
 <h1>Angular Google Maps (AGM) Demo</h1>
 
-<agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [zoomControl]="true">
+<agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [zoomControl]="true"
+(mapClick)="mapClicked($event)">     <!--Aggiunto la gestione dell'evento click sulla mappa-->
 
   <agm-data-layer [geoJson]="geoJsonObject" [style]="styleFunc">
   </agm-data-layer>
@@ -9,7 +10,21 @@
     [latitude]="m.lat" [longitude]="m.lng" [label]="m.label"  [iconUrl]="m.icon"
   >
   </agm-marker>
+
+  <!--Aggiunto un cerchio alla mappa-->
+  <agm-circle [latitude]="circleLat" [longitude]="circleLng"
+    [radius]="radius"
+    [fillColor]="'red'"
+    [circleDraggable]="true"
+    [editable]="true"
+    (radiusChange) = circleRedim($event)
+    (circleDblClick) = circleDoubleClicked($event)
+    >
+    <!--(radiusChange) = circleRedim($event)            Aggiunto la gestione dell'evento cambio raggio-->
+    <!--(circleDblClick) = circleDoubleClicked($event)  Aggiunto la gestione dell'evento doppio click-->
+  </agm-circle>
 </agm-map>
+
 
 <form>
   <h3>Vettori energetici</h3>

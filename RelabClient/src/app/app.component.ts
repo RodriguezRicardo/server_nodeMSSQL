@@ -42,28 +42,45 @@ export class AppComponent {
   //Metodo che riceve i dati e li aggiunge ai marker
   prepareCiVettData = (data: Ci_vettore[]) =>
   {
+    let latTot = 0;   //Uso queste due variabili per calcolare latitudine e longitudine media
+    let lngTot = 0;   //E centrare la mappa
+
     console.log(data); //Verifica di ricevere i vettori energetici
     this.markers = [];
     for (const iterator of data) { //Per ogni oggetto del vettore creo un Marker
       let m = new Marker(iterator.WGS84_X,iterator.WGS84_Y,iterator.CI_VETTORE);
+
+      latTot += m.lat; //Sommo tutte le latitutidini e longitudini
+      lngTot += m.lng;
+
       this.markers.push(m);
     }
+    this.lng = lngTot/data.length;  //commenta
+    this.lat = latTot/data.length;
+    this.zoom = 16;
   }
 
   //Una volta che la pagina web è caricata, viene lanciato il metodo ngOnInit scarico i dati
   //dal server
   ngOnInit() {
     //esegue una richiesta get all'url del server e ritorna i dati di tipo GeoFeatureCollection
-    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-f082311b-ac45-4ce5-a455-acafc61e8b66.ws-eu01.gitpod.io");   //l’url che uso per testare il server
+    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-a688c0e6-bc96-4d5d-af33-40a86a65b59b.ws-eu01.gitpod.io");   //l’url che uso per testare il server
     //ci sottoscriviamo e si lancia il metodo prepareData
     this.obsGeoData.subscribe(this.prepareData);
 
-    //Visualizzare i vettori energetici
-
-    //Effettua la chiamata al server per ottenere l’elenco dei vettori energetici
-    this.obsCiVett = this.http.get<Ci_vettore[]>("https://3000-f082311b-ac45-4ce5-a455-acafc61e8b66.ws-eu01.gitpod.io/ci_vettore/239");
-    this.obsCiVett.subscribe(this.prepareCiVettData);
+    //Rimosso la chiamata http a `MIO_URL/ci_vettore/${val}`
   }
+
+  cambiaFoglio(foglio) : boolean
+  {
+    let val = foglio.value;    //Commenta
+    //passo la var 'val' che contiene il valore del foglio
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-a688c0e6-bc96-4d5d-af33-40a86a65b59b.ws-eu01.gitpod.io/ci_vettore/${val}`);
+    this.obsCiVett.subscribe(this.prepareCiVettData);     //Commenta
+    console.log(val);
+    return false;
+  }
+
 
   styleFunc = (feature) => {
     return ({
@@ -72,5 +89,4 @@ export class AppComponent {
       strokeWeight: 1
     });
   }
-
 }

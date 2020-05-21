@@ -10,3 +10,14 @@
   >
   </agm-marker>
 </agm-map>
+
+<form>
+  <h3>Vettori energetici</h3>
+  <div>
+    <input name="title"  #foglio>  <!--Aggiunta una variabile di template-->
+    <label for="title"> Seleziona il foglio</label>
+  </div>
+  <button (click)="cambiaFoglio(foglio)"> <!--Passo le variabili come parametro -->
+    Cambia
+  </button>
+</form>

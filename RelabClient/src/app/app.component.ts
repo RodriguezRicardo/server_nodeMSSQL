@@ -127,6 +127,22 @@ export class AppComponent {
     }
     console.log("raggio in gradi " + (this.radius * 0.00001)/1.1132);
     //Voglio spedire al server una richiesta che mi ritorni tutte le abitazioni all'interno del cerchio
+
+
+
+
+    let raggioInGradi = (this.radius * 0.00001)/1.1132;
+    //Posso riusare lo stesso observable e lo stesso metodo di gestione del metodo
+    //cambiaFoglio poichè riceverò lo stesso tipo di dati
+    //Divido l'url andando a capo per questioni di leggibilità non perchè sia necessario
+
+    //richiesta http
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-a688c0e6-bc96-4d5d-af33-40a86a65b59b.ws-eu01.gitpod.io/ci_geovettore/
+    ${this.circleLat}/
+    ${this.circleLng}/
+    ${raggioInGradi}`);
+    //si usa observable, ci sottoscriviamo e riutilizziamo il metodo prepareCiVettData(crea i marker con icone)
+    this.obsCiVett.subscribe(this.prepareCiVettData);
   }
 
 

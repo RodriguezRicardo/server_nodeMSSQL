@@ -58,12 +58,15 @@ export class AppComponent {
     for (const iterator of data) { //Per ogni oggetto del vettore creo un Marker
       let m = new Marker(iterator.WGS84_X,iterator.WGS84_Y,iterator.CI_VETTORE);
 
-      latTot += m.lat; //Sommo tutte le latitutidini e longitudini
-      lngTot += m.lng;
+      latTot += m.lat; //Sommo tutte le latitudini
+      lngTot += m.lng; //Sommo tutte le longitudini
 
-      this.markers.push(m);
+      this.markers.push(m);  //metto marker nel vettore
     }
-    this.lng = lngTot/data.length;  //commenta
+    /*Una volta ottenuto la latitudine e longitudine, li divido per la lunghezza del vettore.
+    Perciò il tot. delle lat e lng diviso la lung. del vettore. Faccio una media di lat e lng, per sapere
+    dove centrare la mappa.*/
+    this.lng = lngTot/data.length;
     this.lat = latTot/data.length;
     this.zoom = 16;
   }
@@ -72,7 +75,7 @@ export class AppComponent {
   //dal server
   ngOnInit() {
     //esegue una richiesta get all'url del server e ritorna i dati di tipo GeoFeatureCollection
-    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-a688c0e6-bc96-4d5d-af33-40a86a65b59b.ws-eu01.gitpod.io");   //l’url che uso per testare il server
+    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-a363e702-7b8e-41d4-a1ef-77c2de50cdb7.ws-eu01.gitpod.io");   //l’url che uso per testare il server
     //ci sottoscriviamo e si lancia il metodo prepareData
     this.obsGeoData.subscribe(this.prepareData);
 
@@ -81,10 +84,15 @@ export class AppComponent {
 
   cambiaFoglio(foglio) : boolean
   {
-    let val = foglio.value;    //Commenta
-    //passo la var 'val' che contiene il valore del foglio
-    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-a688c0e6-bc96-4d5d-af33-40a86a65b59b.ws-eu01.gitpod.io/ci_vettore/${val}`);
-    this.obsCiVett.subscribe(this.prepareCiVettData);     //Commenta
+    let val = foglio.value;    //Assegno alla variabile "val" il valore che c'è nel foglio
+    /*Eseguo una richiesta http get di tipo Ci_vettore al server, solo che al posto di passargli un singolo valore scelto,
+    lo aggiungo alla variabile "val" che lo conterrà e lo passo al url.*/
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-a363e702-7b8e-41d4-a1ef-77c2de50cdb7.ws-eu01.gitpod.io/ci_vettore/${val}`);
+
+    this.obsCiVett.subscribe(this.prepareCiVettData);
+    /*Si usa observable e ci sottoscriviamo, ricicliamo il
+    metodo prepareCiVettData.(crea i marker con icone).*/
+
     console.log(val);
     return false;
   }
@@ -137,7 +145,7 @@ export class AppComponent {
     //Divido l'url andando a capo per questioni di leggibilità non perchè sia necessario
 
     //richiesta http
-    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-a688c0e6-bc96-4d5d-af33-40a86a65b59b.ws-eu01.gitpod.io/ci_geovettore/
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-a363e702-7b8e-41d4-a1ef-77c2de50cdb7.ws-eu01.gitpod.io/ci_geovettore/
     ${this.circleLat}/
     ${this.circleLng}/
     ${raggioInGradi}`);

@@ -29,13 +29,14 @@ export class AppComponent {
   obsCiVett : Observable<Ci_vettore[]>; //Crea un observable per ricevere i vettori energetici
   markers: Marker[];
 
-
   //per fare il cerchio, aggiungo questi attributi
   circleLat : number = 0; //Latitudine e longitudine iniziale del cerchio
   circleLng: number = 0;
   maxRadius: number = 400; //Voglio evitare raggi troppo grossi
   radius : number = this.maxRadius; //Memorizzo il raggio del cerchio
 
+  //creato var. 04.3
+  serverUrl : string = "https://3000-a2707bcf-ad02-43b6-b179-831a2ef0e600.ws-eu01.gitpod.io";
 
   constructor(public http: HttpClient) {
   //Facciamo iniettare il modulo HttpClient dal framework Angular (ricordati di importare la libreria)
@@ -71,13 +72,14 @@ export class AppComponent {
     this.zoom = 16;
   }
 
-  //Una volta che la pagina web è caricata, viene lanciato il metodo ngOnInit scarico i dati
-  //dal server
+  /*Una volta che la pagina web è caricata, viene lanciato il metodo ngOnInit scarico i dati dal server.
+
+  Svuoto ngOnInit 04.3*/
   ngOnInit() {
     //esegue una richiesta get all'url del server e ritorna i dati di tipo GeoFeatureCollection
-    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-a2707bcf-ad02-43b6-b179-831a2ef0e600.ws-eu01.gitpod.io");   //l’url che uso per testare il server
+    //this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-a2707bcf-ad02-43b6-b179-831a2ef0e600.ws-eu01.gitpod.io");   //l’url che uso per testare il server
     //ci sottoscriviamo e si lancia il metodo prepareData
-    this.obsGeoData.subscribe(this.prepareData);
+    //this.obsGeoData.subscribe(this.prepareData);
 
     //Rimosso la chiamata http a `MIO_URL/ci_vettore/${val}`
   }
@@ -114,7 +116,7 @@ export class AppComponent {
   }
 
   //Aggiunto il gestore del metodo circleDblClick
-
+  //mod 04.3
   circleDoubleClicked(circleCenter)
   {
     console.log(circleCenter);       //Voglio ottenere solo i valori entro questo cerchio
@@ -133,24 +135,36 @@ export class AppComponent {
       console.log("area selezionata troppo vasta sarà reimpostata a maxRadius");
       this.radius = this.maxRadius;
     }
-    console.log("raggio in gradi " + (this.radius * 0.00001)/1.1132);
+    //console.log("raggio in gradi " + (this.radius * 0.00001)/1.1132);
     //Voglio spedire al server una richiesta che mi ritorni tutte le abitazioni all'interno del cerchio
 
 
 
-
+    //mod 04.3
     let raggioInGradi = (this.radius * 0.00001)/1.1132;
+
+    //richiama i geovettori
+    const urlciVett = `${this.serverUrl}/ci_geovettore/
+    ${this.circleLat}/
+    ${this.circleLng}/
+    ${raggioInGradi}`;
+
+    //richiama le zone catastali
+    const urlGeoGeom = `${this.serverUrl}/geogeom/
+    ${this.circleLat}/
+    ${this.circleLng}/
+    ${raggioInGradi}`;
+
     //Posso riusare lo stesso observable e lo stesso metodo di gestione del metodo
     //cambiaFoglio poichè riceverò lo stesso tipo di dati
     //Divido l'url andando a capo per questioni di leggibilità non perchè sia necessario
 
-    //richiesta http
-    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-a2707bcf-ad02-43b6-b179-831a2ef0e600.ws-eu01.gitpod.io/ci_geovettore/
-    ${this.circleLat}/
-    ${this.circleLng}/
-    ${raggioInGradi}`);
+    this.obsCiVett = this.http.get<Ci_vettore[]>(urlciVett);
     //si usa observable, ci sottoscriviamo e riutilizziamo il metodo prepareCiVettData(crea i marker con icone)
     this.obsCiVett.subscribe(this.prepareCiVettData);
+
+    this.obsGeoData = this.http.get<GeoFeatureCollection>(urlGeoGeom);
+    this.obsGeoData.subscribe(this.prepareData);
   }
 
 

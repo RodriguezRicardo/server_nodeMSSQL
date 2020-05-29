@@ -17,12 +17,20 @@ module.exports = class CoordConverter {
         let geoJsonHeader = new FeatureCollection(); //Crea la Featurecollection
         let i = 0;
         for (const record of recordset) {  
+            //in ogni riga del nonstro recordset, prendiamo la media e la somma
+            let media = record["media"];
+            let somma = record["somma"];
+
             let polygonGeometry = parse(record["WKT"]); //parso da wkt a geojson geometry
 
             //let geom = this._convertPolygon(polygonGeometry);  converto in "WSG 84" 
             let geom = (polygonGeometry); // non converto più in "WGS 84" 
+            
             // e metto la geometry  geojson
-            geoJsonHeader.features.push(new Feature(i,geom)); //per ogni poligono nel recordset crea una Feature 
+            //quando creo la feature , gli passo la media e la somma
+            geoJsonHeader.features.push(new Feature(i,geom, media, somma));
+            i++;
+            //per ogni poligono nel recordset crea una Feature 
         }
         return geoJsonHeader;
     }

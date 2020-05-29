@@ -45,7 +45,7 @@ export class AppComponent {
   //Metodo che scarica i dati nella variabile geoJsonObject
   prepareData = (data: GeoFeatureCollection) => {
     this.geoJsonObject = data
-    console.log( this.geoJsonObject);
+    console.log(this.geoJsonObject);
   }
 
   //Metodo che riceve i dati e li aggiunge ai marker
@@ -169,6 +169,8 @@ export class AppComponent {
 
 
   styleFunc = (feature) => {
+    //aggiunto il console log    04.3
+    console.log(feature)
     return ({
       clickable: false,
       fillColor: this.fillColor,

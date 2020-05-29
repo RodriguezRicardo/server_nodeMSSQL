@@ -10,13 +10,18 @@ module.exports = class CoordConverter {
         proj4.defs("EPSG:32632", "+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs");
         //proj4.defs("EPSG:4362", "già definito in proj4");
     }
+
+    //Modificato 04.3
     //Riceve come parametro il recordset estratto dal DB 
     generateGeoJson(recordset) {
         let geoJsonHeader = new FeatureCollection(); //Crea la Featurecollection
         let i = 0;
         for (const record of recordset) {  
-            let polygonGeometry = parse(record[""]); //parso da wkt a geojson geometry
-            let geom = this._convertPolygon(polygonGeometry); // converto in "EPSG:4362" 
+            let polygonGeometry = parse(record["WKT"]); //parso da wkt a geojson geometry
+
+            //let geom = this._convertPolygon(polygonGeometry);  converto in "WSG 84" 
+            let geom = (polygonGeometry); // non converto più in "WGS 84" 
+            // e metto la geometry  geojson
             geoJsonHeader.features.push(new Feature(i,geom)); //per ogni poligono nel recordset crea una Feature 
         }
         return geoJsonHeader;

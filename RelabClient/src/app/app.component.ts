@@ -75,7 +75,7 @@ export class AppComponent {
   //dal server
   ngOnInit() {
     //esegue una richiesta get all'url del server e ritorna i dati di tipo GeoFeatureCollection
-    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-a363e702-7b8e-41d4-a1ef-77c2de50cdb7.ws-eu01.gitpod.io");   //l’url che uso per testare il server
+    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-a2707bcf-ad02-43b6-b179-831a2ef0e600.ws-eu01.gitpod.io");   //l’url che uso per testare il server
     //ci sottoscriviamo e si lancia il metodo prepareData
     this.obsGeoData.subscribe(this.prepareData);
 
@@ -87,7 +87,7 @@ export class AppComponent {
     let val = foglio.value;    //Assegno alla variabile "val" il valore che c'è nel foglio
     /*Eseguo una richiesta http get di tipo Ci_vettore al server, solo che al posto di passargli un singolo valore scelto,
     lo aggiungo alla variabile "val" che lo conterrà e lo passo al url.*/
-    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-a363e702-7b8e-41d4-a1ef-77c2de50cdb7.ws-eu01.gitpod.io/ci_vettore/${val}`);
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-a2707bcf-ad02-43b6-b179-831a2ef0e600.ws-eu01.gitpod.io/ci_vettore/${val}`);
 
     this.obsCiVett.subscribe(this.prepareCiVettData);
     /*Si usa observable e ci sottoscriviamo, ricicliamo il
@@ -145,7 +145,7 @@ export class AppComponent {
     //Divido l'url andando a capo per questioni di leggibilità non perchè sia necessario
 
     //richiesta http
-    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-a363e702-7b8e-41d4-a1ef-77c2de50cdb7.ws-eu01.gitpod.io/ci_geovettore/
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-a2707bcf-ad02-43b6-b179-831a2ef0e600.ws-eu01.gitpod.io/ci_geovettore/
     ${this.circleLat}/
     ${this.circleLng}/
     ${raggioInGradi}`);

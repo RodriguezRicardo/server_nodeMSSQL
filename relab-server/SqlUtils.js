@@ -21,12 +21,13 @@ module.exports = class SqlUtils {
             //aggiunto req
         });
     }
-
+    
+    //modificato 04.3
     //makeSqlRequest esegue una query sul db, se la query va a buon fine viene richiamata la funzione di //callback che invoca il metodo sendQuery
     //Anche makeSqlRequest è una callback richiamata da connect, dobbiamo aggiungere solo il parametro req
     static makeSqlRequest(req, res) {
         let sqlRequest = new sql.Request();  //sqlRequest: oggetto che serve a eseguire le query
-        let q = 'SELECT DISTINCT TOP (100) [GEOM].STAsText() FROM [Katmai].[dbo].[interventiMilano]';
+        let q = 'SELECT DISTINCT TOP (100) [GEOM].STAsText() FROM [Katmai].[dbo].[intMil4326WKT]'; //mod. la tabella intMil. in tutte le query
         //eseguo la query e aspetto il risultato nella callback
         sqlRequest.query(q, (err, result) => {SqlUtils.sendQueryResults(err,result,res)}); 
     }
@@ -42,7 +43,7 @@ module.exports = class SqlUtils {
         let foglio = req.params.foglio; //ottengo il foglio passato come parametro dall'url
 
         let q = `SELECT INDIRIZZO, WGS84_X, WGS84_Y, CLASSE_ENE, EP_H_ND, CI_VETTORE, FOGLIO, SEZ
-        FROM [Katmai].[dbo].[interventiMilano]
+        FROM [Katmai].[dbo].[intMil4326WKT]  
         WHERE FOGLIO = ${foglio}`
 
         //eseguo la query e aspetto il risultato nella callback
@@ -63,7 +64,7 @@ module.exports = class SqlUtils {
 
         //query che serve per ricercare tutte le abitazioni in quel cerchio.
         let q = `SELECT INDIRIZZO, WGS84_X, WGS84_Y, CLASSE_ENE, EP_H_ND, CI_VETTORE, FOGLIO, SEZ
-        FROM [Katmai].[dbo].[interventiMilano]
+        FROM [Katmai].[dbo].[intMil4326WKT]
         WHERE WGS84_X > ${x} - ${r} AND      
         WGS84_X < ${x} + ${r} AND
         WGS84_Y > ${y} - ${r} AND 

@@ -27,7 +27,8 @@ module.exports = class SqlUtils {
     //Anche makeSqlRequest è una callback richiamata da connect, dobbiamo aggiungere solo il parametro req
     static makeSqlRequest(req, res) {
         let sqlRequest = new sql.Request();  //sqlRequest: oggetto che serve a eseguire le query
-        let q = 'SELECT DISTINCT TOP (100) [GEOM].STAsText() FROM [Katmai].[dbo].[intMil4326WKT]'; //mod. la tabella intMil. in tutte le query
+        let q = 'SELECT DISTINCT TOP (100) [WKT] FROM [Katmai].[dbo].[intMil4326WKT]';
+        //mod. la tabella intMil. in tutte le query
         //eseguo la query e aspetto il risultato nella callback
         sqlRequest.query(q, (err, result) => {SqlUtils.sendQueryResults(err,result,res)}); 
     }

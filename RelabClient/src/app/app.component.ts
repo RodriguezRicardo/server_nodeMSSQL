@@ -36,7 +36,7 @@ export class AppComponent {
   radius : number = this.maxRadius; //Memorizzo il raggio del cerchio
 
   //creato var. 04.3
-  serverUrl : string = "https://3000-a2707bcf-ad02-43b6-b179-831a2ef0e600.ws-eu01.gitpod.io";
+  serverUrl : string = "https://3000-d52013b2-f0a0-43cd-92aa-27ffe74fd693.ws-eu01.gitpod.io";
 
   constructor(public http: HttpClient) {
   //Facciamo iniettare il modulo HttpClient dal framework Angular (ricordati di importare la libreria)
@@ -89,7 +89,7 @@ export class AppComponent {
     let val = foglio.value;    //Assegno alla variabile "val" il valore che c'è nel foglio
     /*Eseguo una richiesta http get di tipo Ci_vettore al server, solo che al posto di passargli un singolo valore scelto,
     lo aggiungo alla variabile "val" che lo conterrà e lo passo al url.*/
-    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-a2707bcf-ad02-43b6-b179-831a2ef0e600.ws-eu01.gitpod.io/ci_vettore/${val}`);
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-d52013b2-f0a0-43cd-92aa-27ffe74fd693.ws-eu01.gitpod.io/ci_vettore/${val}`);
 
     this.obsCiVett.subscribe(this.prepareCiVettData);
     /*Si usa observable e ci sottoscriviamo, ricicliamo il
@@ -168,13 +168,30 @@ export class AppComponent {
   }
 
 
+  //modificato 04.3
   styleFunc = (feature) => {
-    //aggiunto il console log    04.3
-    console.log(feature)
     return ({
       clickable: false,
-      fillColor: this.fillColor,
-      strokeWeight: 1
+      fillColor: this.avgColorMapGreen(feature.i.media),
+      strokeWeight: 1,
+      fillOpacity : 1  //Fill opacity 1 = opaco (i numeri tra 0 e 1 sono le gradazioni di trasparenza)
     });
+  }
+
+  //aggiunto mappa scala di verdi
+  avgColorMapGreen = (media) =>
+  {
+    if(media <= 36) return "#EBECDF";
+    if(36 < media && media <= 40) return "#DADFC9";
+    if(40 < media && media <= 58) return "#C5D2B4";
+    if(58 < media && media <= 70) return "#ADC49F";
+    if(75 < media && media <= 84) return "#93B68B";
+    if(84 < media && media <= 100) return "#77A876";
+    if(100 < media && media <= 116) return "#629A6C";
+    if(116 < media && media <= 1032) return "#558869";
+    if(1032 < media && media <= 1068) return "#487563";
+    if(1068 < media && media <= 1948) return "#3B625B";
+    if(1948 < media && media <= 3780) return "#2F4E4F";
+    return "#003000" //Quasi nero
   }
 }

@@ -36,7 +36,7 @@ export class AppComponent {
   radius : number = this.maxRadius; //Memorizzo il raggio del cerchio
 
   //creato var. 04.3
-  serverUrl : string = "https://3000-d52013b2-f0a0-43cd-92aa-27ffe74fd693.ws-eu01.gitpod.io";
+  serverUrl : string = "https://3000-ba62bff8-7011-4e2b-b1b8-52a21bd9854a.ws-eu01.gitpod.io";
 
   constructor(public http: HttpClient) {
   //Facciamo iniettare il modulo HttpClient dal framework Angular (ricordati di importare la libreria)
@@ -89,7 +89,7 @@ export class AppComponent {
     let val = foglio.value;    //Assegno alla variabile "val" il valore che c'è nel foglio
     /*Eseguo una richiesta http get di tipo Ci_vettore al server, solo che al posto di passargli un singolo valore scelto,
     lo aggiungo alla variabile "val" che lo conterrà e lo passo al url.*/
-    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-d52013b2-f0a0-43cd-92aa-27ffe74fd693.ws-eu01.gitpod.io/ci_vettore/${val}`);
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-ba62bff8-7011-4e2b-b1b8-52a21bd9854a.ws-eu01.gitpod.io/ci_vettore/${val}`);
 
     this.obsCiVett.subscribe(this.prepareCiVettData);
     /*Si usa observable e ci sottoscriviamo, ricicliamo il
@@ -172,7 +172,7 @@ export class AppComponent {
   styleFunc = (feature) => {
     return ({
       clickable: false,
-      fillColor: this.avgColorMapGreen(feature.i.media),
+      fillColor: this.avgColorMapGreen(feature.j.media),
       strokeWeight: 1,
       fillOpacity : 1  //Fill opacity 1 = opaco (i numeri tra 0 e 1 sono le gradazioni di trasparenza)
     });

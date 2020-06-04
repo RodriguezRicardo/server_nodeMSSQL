@@ -40,6 +40,12 @@ app.get('/geogeom/:lng/:lat/:r', function (req, res) {
     sqlUtils.connect(req, res, sqlUtils.geoGeomRequest);
 });
 
+//route per far vedere tutte le zone catastali
+app.get('/all_zone', function (req, res) {
+    //richiamo il metodo che ottiene tutte le zone catastali
+    sqlUtils.connect(req, res, sqlUtils.allZoneRequest);
+});
+
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!');
 });

@@ -36,7 +36,7 @@ export class AppComponent {
   radius : number = this.maxRadius; //Memorizzo il raggio del cerchio
 
   //creato var. 04.3
-  serverUrl : string = "https://3000-dd311dbc-fbb8-4c96-ae89-99b6173aa90c.ws-eu01.gitpod.io";
+  serverUrl : string = "https://3000-c4eb41de-6a52-4c66-a9e8-cd03d343a715.ws-eu01.gitpod.io";
 
   constructor(public http: HttpClient) {
   //Facciamo iniettare il modulo HttpClient dal framework Angular (ricordati di importare la libreria)
@@ -89,7 +89,7 @@ export class AppComponent {
     let val = foglio.value;    //Assegno alla variabile "val" il valore che c'è nel foglio
     /*Eseguo una richiesta http get di tipo Ci_vettore al server, solo che al posto di passargli un singolo valore scelto,
     lo aggiungo alla variabile "val" che lo conterrà e lo passo al url.*/
-    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-dd311dbc-fbb8-4c96-ae89-99b6173aa90c.ws-eu01.gitpod.io/ci_vettore/${val}`);
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`${this.serverUrl}/ci_vettore/${val}`);
 
     this.obsCiVett.subscribe(this.prepareCiVettData);
     /*Si usa observable e ci sottoscriviamo, ricicliamo il
@@ -103,6 +103,7 @@ export class AppComponent {
   catastali.*/
   tutteZone() : boolean
   {
+    console.log('hai schiacciato il pulsante per vedere le zone catastali');
     this.obsGeoData = this.http.get<GeoFeatureCollection>(`${this.serverUrl}/all_zone`);
     this.obsGeoData.subscribe(this.prepareData);
     return false;
